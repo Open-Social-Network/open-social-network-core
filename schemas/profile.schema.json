@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensocial.dev/schemas/profile.schema.json",
+  "title": "OpenSocial Profile",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["protocol", "version", "handle", "name", "publicKey", "endpoints"],
+  "properties": {
+    "protocol": {
+      "const": "opensocial"
+    },
+    "version": {
+      "const": "0.1"
+    },
+    "handle": {
+      "type": "string",
+      "minLength": 3
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bio": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "publicKey": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["alg", "jwk"],
+      "properties": {
+        "alg": {
+          "const": "ES256"
+        },
+        "jwk": {
+          "type": "object",
+          "required": ["kty", "crv", "x", "y"],
+          "properties": {
+            "kty": {
+              "const": "EC"
+            },
+            "crv": {
+              "const": "P-256"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["profile", "feed"],
+      "properties": {
+        "profile": {
+          "type": "string"
+        },
+        "feed": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

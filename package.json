@@ -1,0 +1,32 @@
+{
+  "name": "@opensocial/core",
+  "version": "0.1.0",
+  "description": "Core protocol primitives, schemas, and reference tests for OpenSocial.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Open-Social-Organization/opensocial-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Open-Social-Organization/opensocial-core/issues"
+  },
+  "homepage": "https://github.com/Open-Social-Organization/opensocial-core#readme",
+  "keywords": [
+    "opensocial",
+    "protocol",
+    "decentralized-social",
+    "identity",
+    "signed-feeds",
+    "open-web"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "audit": "npm audit --audit-level=moderate"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vitest": "^4.1.8"
+  }
+}
