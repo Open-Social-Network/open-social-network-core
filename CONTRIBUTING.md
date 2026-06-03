@@ -1,6 +1,6 @@
-# Contributing to OpenSocial Core
+# Contributing to Open Social Network Core
 
-OpenSocial Core should remain small, clear, and implementation-oriented.
+Open Social Network Core should remain small, clear, and implementation-oriented.
 
 ## Principles
 

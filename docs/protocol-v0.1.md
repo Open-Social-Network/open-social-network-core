@@ -1,6 +1,6 @@
-# OpenSocial Protocol v0.1
+# Open Social Network Protocol v0.1
 
-OpenSocial v0.1 proves a narrow but important idea: a decentralized social feed can be built from sovereign pages, static JSON files, and cryptographically signed posts.
+Open Social Network v0.1 proves a narrow but important idea: a decentralized social feed can be built from sovereign pages, static JSON files, and cryptographically signed posts.
 
 This document is intentionally small. The protocol should earn complexity only when real use requires it.
 
@@ -16,10 +16,10 @@ This document is intentionally small. The protocol should earn complexity only w
 
 The durable identity is a public/private key pair. A human-readable handle points to that identity, but the key is the trust anchor.
 
-An OpenSocial identity file must be available as JSON. Recommended locations:
+An Open Social Network identity file must be available as JSON. Recommended locations:
 
 - `/profile.json`
-- `/.well-known/opensocial.json`
+- `/.well-known/open-social-network.json`
 
 The identity file contains:
 

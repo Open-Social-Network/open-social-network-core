@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="./assets/open-social-logo.png" width="96" alt="OpenSocial logo" />
+  <img src="./assets/open-social-network-logo.png" width="96" alt="Open Social Network logo" />
 </p>
 
-# OpenSocial Core
+# Open Social Network Core
 
-OpenSocial Core is the protocol foundation for OpenSocial: an open, decentralized social layer for the web where identity, audience, and content belong to people rather than platforms.
+Open Social Network Core is the protocol foundation for Open Social Network: an open, decentralized social layer for the web where identity, audience, and content belong to people rather than platforms.
 
 This repository contains the early protocol specification, TypeScript reference primitives, JSON schemas, and conformance-oriented tests for sovereign social pages and signed feeds.
 
 ## In One Minute
 
-OpenSocial Core defines how an independent social profile works.
+Open Social Network Core defines how an independent social profile works.
 
 At minimum, a profile has:
 
@@ -34,13 +34,13 @@ But social identity is still mostly trapped inside platforms.
 
 Your username, followers, posts, reputation, and reach usually belong to a company database. If the platform changes rules, disappears, bans you, locks APIs, or degrades the product, your social existence is trapped with it.
 
-OpenSocial exists to make social identity part of the open internet itself.
+Open Social Network exists to make social identity part of the open internet itself.
 
-## Why OpenSocial Exists
+## Why Open Social Network Exists
 
 The social web should not require every person to live inside a closed platform database.
 
-OpenSocial starts from a simpler premise:
+Open Social Network starts from a simpler premise:
 
 - a profile can be a page on the internet
 - a feed can be a static JSON file
@@ -52,7 +52,7 @@ The protocol is designed to use infrastructure the web already has: HTTP, DNS, s
 
 ## What Changes When Social Becomes a Protocol
 
-If OpenSocial works, a social profile becomes more like an email address or a domain name than an account inside an app.
+If Open Social Network works, a social profile becomes more like an email address or a domain name than an account inside an app.
 
 For users:
 
@@ -102,7 +102,7 @@ Users should be able to move domains, change hosting providers, mirror their pag
 
 ### Open Ecosystem
 
-OpenSocial belongs to nobody. The protocol should support many clients, many aggregators, many hosts, and many moderation or recommendation systems.
+Open Social Network belongs to nobody. The protocol should support many clients, many aggregators, many hosts, and many moderation or recommendation systems.
 
 ### Extensibility
 
@@ -110,7 +110,7 @@ Future capabilities should be optional modules. Older clients should ignore unkn
 
 ## Version 0.1 Scope
 
-OpenSocial Core v0.1 defines the minimum viable social protocol:
+Open Social Network Core v0.1 defines the minimum viable social protocol:
 
 - `profile.json` identity files
 - `feed.json` post feeds
@@ -124,7 +124,7 @@ It does not define accounts, global search, moderation policy, encrypted messagi
 ## Repository Contents
 
 ```text
-opensocial-core/
+open-social-network-core/
 ├── docs/
 │   └── protocol-v0.1.md
 ├── schemas/
@@ -165,7 +165,7 @@ Your host should be able to publish:
 
 - `profile.json`
 - `feed.json`
-- optionally `/.well-known/opensocial.json`
+- optionally `/.well-known/open-social-network.json`
 
 It should never publish private keys.
 
@@ -187,7 +187,7 @@ npm audit
 
 ```json
 {
-  "protocol": "opensocial",
+  "protocol": "open-social-network",
   "version": "0.1",
   "handle": "ada@example.com",
   "name": "Ada Lovelace",
@@ -211,7 +211,7 @@ npm audit
 
 ```json
 {
-  "protocol": "opensocial",
+  "protocol": "open-social-network",
   "version": "0.1",
   "author": "ada@example.com",
   "posts": [
@@ -231,22 +231,22 @@ npm audit
 
 ## Related Repositories
 
-- [`opensocial-cli`](https://github.com/Open-Social-Organization/opensocial-cli) - the easiest way to create and publish a sovereign OpenSocial page
-- [`opensocial-web`](https://github.com/Open-Social-Organization/opensocial-web) - the official web aggregator
-- [`opensocial-page`](https://github.com/Open-Social-Organization/opensocial-page) - a sovereign page template
+- [`open-social-network-cli`](https://github.com/Open-Social-Network/open-social-network-cli) - the easiest way to create and publish a sovereign Open Social Network page
+- [`open-social-network-web`](https://github.com/Open-Social-Network/open-social-network-web) - the official web aggregator
+- [`open-social-network-page`](https://github.com/Open-Social-Network/open-social-network-page) - a sovereign page template
 
 ## Easiest Way To Publish
 
-If you want to create a real OpenSocial identity instead of implementing the protocol directly, start with:
+If you want to create a real Open Social Network identity instead of implementing the protocol directly, start with:
 
 ```bash
-npx opensocial
+npx open-social-network
 ```
 
 The CLI creates a signed sovereign page, validates it, previews it locally, and deploys it to a free static host.
 
 ## Status
 
-OpenSocial is in early alpha. The goal of this repository is to make the protocol understandable, testable, and implementable before expanding the ecosystem.
+Open Social Network is in early alpha. The goal of this repository is to make the protocol understandable, testable, and implementable before expanding the ecosystem.
 
 The ambition is large, but the first step is deliberately small: prove that a signed, sovereign, static social feed can exist and be read by any compatible client.

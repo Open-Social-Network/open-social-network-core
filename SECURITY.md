@@ -1,6 +1,6 @@
 # Security Policy
 
-OpenSocial Core is early alpha protocol software. Do not use it yet as the sole trust layer for high-risk or production-critical identity systems.
+Open Social Network Core is early alpha protocol software. Do not use it yet as the sole trust layer for high-risk or production-critical identity systems.
 
 ## Reporting Security Issues
 

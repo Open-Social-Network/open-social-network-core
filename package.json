@@ -1,19 +1,19 @@
 {
-  "name": "@opensocial/core",
+  "name": "@open-social-network/core",
   "version": "0.1.0",
-  "description": "Core protocol primitives, schemas, and reference tests for OpenSocial.",
+  "description": "Core protocol primitives, schemas, and reference tests for Open Social Network.",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Open-Social-Organization/opensocial-core.git"
+    "url": "git+https://github.com/Open-Social-Network/open-social-network-core.git"
   },
   "bugs": {
-    "url": "https://github.com/Open-Social-Organization/opensocial-core/issues"
+    "url": "https://github.com/Open-Social-Network/open-social-network-core/issues"
   },
-  "homepage": "https://github.com/Open-Social-Organization/opensocial-core#readme",
+  "homepage": "https://github.com/Open-Social-Network/open-social-network-core#readme",
   "keywords": [
-    "opensocial",
+    "open-social-network",
     "protocol",
     "decentralized-social",
     "identity",

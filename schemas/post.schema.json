@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opensocial.dev/schemas/post.schema.json",
-  "title": "OpenSocial Post",
+  "$id": "https://open-social-network.dev/schemas/post.schema.json",
+  "title": "Open Social Network Post",
   "type": "object",
   "additionalProperties": true,
   "required": ["id", "author", "createdAt", "content", "signature"],

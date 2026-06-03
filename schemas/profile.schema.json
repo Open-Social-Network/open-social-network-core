@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opensocial.dev/schemas/profile.schema.json",
-  "title": "OpenSocial Profile",
+  "$id": "https://open-social-network.dev/schemas/profile.schema.json",
+  "title": "Open Social Network Profile",
   "type": "object",
   "additionalProperties": true,
   "required": ["protocol", "version", "handle", "name", "publicKey", "endpoints"],
   "properties": {
     "protocol": {
-      "const": "opensocial"
+      "const": "open-social-network"
     },
     "version": {
       "const": "0.1"

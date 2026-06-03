@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opensocial.dev/schemas/feed.schema.json",
-  "title": "OpenSocial Feed",
+  "$id": "https://open-social-network.dev/schemas/feed.schema.json",
+  "title": "Open Social Network Feed",
   "type": "object",
   "additionalProperties": true,
   "required": ["protocol", "version", "author", "posts"],
   "properties": {
     "protocol": {
-      "const": "opensocial"
+      "const": "open-social-network"
     },
     "version": {
       "const": "0.1"
