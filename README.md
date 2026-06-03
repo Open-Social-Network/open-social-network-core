@@ -8,9 +8,11 @@ Open Social Network Core is the protocol foundation for Open Social Network: an 
 
 This repository contains the early protocol specification, TypeScript reference primitives, JSON schemas, and conformance-oriented tests for sovereign social pages and signed feeds.
 
+If you want to use Open Social Network rather than implement it, start with Open Social Network Web or the CLI. They let you create a page, write posts, and host the public files anywhere static files are supported.
+
 ## In One Minute
 
-Open Social Network Core defines how an independent social profile works.
+Open Social Network Core defines how an independent social page works.
 
 At minimum, a profile has:
 
@@ -19,6 +21,8 @@ At minimum, a profile has:
 3. signed posts that can be verified by any client
 
 If you are building an aggregator, host, SDK, validator, crawler, or sovereign page generator, this repository is the starting point.
+
+If you are a normal user, you should not need to read JSON or cryptography details to get started.
 
 ## The Internet Has Protocols for Almost Everything
 
@@ -232,7 +236,7 @@ npm audit
 ## Related Repositories
 
 - [`open-social-network-cli`](https://github.com/Open-Social-Network/open-social-network-cli) - the easiest way to create and publish a sovereign Open Social Network page
-- [`open-social-network-web`](https://github.com/Open-Social-Network/open-social-network-web) - the official web aggregator
+- [`open-social-network-web`](https://github.com/Open-Social-Network/open-social-network-web) - the easiest way to read, create, post, and export a page
 - [`open-social-network-page`](https://github.com/Open-Social-Network/open-social-network-page) - a sovereign page template
 
 ## Easiest Way To Publish
