@@ -231,8 +231,19 @@ npm audit
 
 ## Related Repositories
 
+- [`opensocial-cli`](https://github.com/Open-Social-Organization/opensocial-cli) - the easiest way to create and publish a sovereign OpenSocial page
 - [`opensocial-web`](https://github.com/Open-Social-Organization/opensocial-web) - the official web aggregator
 - [`opensocial-page`](https://github.com/Open-Social-Organization/opensocial-page) - a sovereign page template
+
+## Easiest Way To Publish
+
+If you want to create a real OpenSocial identity instead of implementing the protocol directly, start with:
+
+```bash
+npx opensocial
+```
+
+The CLI creates a signed sovereign page, validates it, previews it locally, and deploys it to a free static host.
 
 ## Status
 
