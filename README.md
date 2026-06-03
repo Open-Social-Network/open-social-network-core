@@ -119,6 +119,7 @@ Open Social Network Core v0.1 defines the minimum viable social protocol:
 - `profile.json` identity files
 - `feed.json` post feeds
 - ES256 signed posts
+- signed public actions for likes, dislikes, and comments
 - canonical JSON signing payloads
 - profile endpoint discovery
 - chronological feed aggregation
@@ -134,7 +135,8 @@ open-social-network-core/
 ├── schemas/
 │   ├── feed.schema.json
 │   ├── post.schema.json
-│   └── profile.schema.json
+│   ├── profile.schema.json
+│   └── action.schema.json
 ├── src/
 │   ├── aggregator/
 │   └── protocol/
@@ -150,7 +152,8 @@ Start here:
 1. Read [docs/protocol-v0.1.md](./docs/protocol-v0.1.md).
 2. Inspect [schemas/profile.schema.json](./schemas/profile.schema.json).
 3. Inspect [schemas/feed.schema.json](./schemas/feed.schema.json).
-4. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts).
+4. Inspect [schemas/action.schema.json](./schemas/action.schema.json).
+5. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts) and [src/protocol/public-actions.test.ts](./src/protocol/public-actions.test.ts).
 
 ### If You Are Building an Aggregator
 
@@ -160,8 +163,9 @@ Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregat
 2. fetch profile files
 3. resolve feed endpoints
 4. verify every post signature
-5. render only verified posts
-6. report rejected posts and failed feeds
+5. verify any public actions it has discovered
+6. render only verified posts and verified actions
+7. report rejected posts, rejected actions, and failed feeds
 
 ### If You Are Building a Page Host
 
@@ -172,6 +176,8 @@ Your host should be able to publish:
 - optionally `/.well-known/open-social-network.json`
 
 It should never publish private keys.
+
+Public actions can live in a public action folder such as `/opensocial/actions/`. That folder can be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
 ## Install
 
@@ -230,6 +236,27 @@ npm audit
       }
     }
   ]
+}
+```
+
+## Minimal Public Action
+
+```json
+{
+  "id": "action_001",
+  "kind": "reaction",
+  "actor": "ada@example.com",
+  "createdAt": "2026-06-03T12:01:00.000Z",
+  "target": {
+    "type": "post",
+    "id": "post_001",
+    "author": "tommy@example.com"
+  },
+  "reaction": "like",
+  "signature": {
+    "alg": "ES256",
+    "value": "..."
+  }
 }
 ```
 

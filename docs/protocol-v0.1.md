@@ -54,6 +54,35 @@ The first supported algorithm is:
 - SHA-256
 - base64url-encoded raw signature bytes
 
+## Signed Public Actions
+
+Likes, dislikes, and comments are public actions. They are not private database rows owned by one app. They are signed protocol records that any compatible aggregator can verify and display.
+
+The first action kinds are:
+
+- `reaction` with `reaction: "like"`
+- `reaction` with `reaction: "dislike"`
+- `reaction` with `reaction: "none"` to clear the actor's current reaction
+- `comment` with a public `content` string
+
+Every action targets a post by:
+
+- target type
+- target post id
+- target post author
+- optional target URL
+
+Every action is signed by the actor identity. The signing payload is the action object without the `signature` field, using the same canonical JSON rules as posts.
+
+Aggregators should count reactions with one active reaction per actor per target. When the same actor publishes multiple reactions for the same post, the latest action wins. A `none` reaction removes that actor's active reaction. Comments should be rendered only after the action signature verifies against the actor profile.
+
+Recommended public storage locations are:
+
+- `/opensocial/actions/index.json`
+- `/opensocial/actions/{action-id}.json`
+
+Those locations are recommendations, not a central service. Hosts may support writes through HTTPS, WebDAV, Git, local folders, S3-compatible storage, IPFS, relays, inboxes, or other optional modules. A page without public action storage is still a valid Open Social Network page; it is simply read-only for actions until a compatible write path is available.
+
 ## Aggregator Behavior
 
 A basic aggregator should:
@@ -63,8 +92,9 @@ A basic aggregator should:
 3. Resolve and fetch each feed endpoint.
 4. Reject feeds where `feed.author` does not match `profile.handle`.
 5. Verify every post against the profile public key.
-6. Render only verified posts.
-7. Expose diagnostics for rejected posts and failed feeds.
+6. Fetch and verify any public action sources it knows about.
+7. Render only verified posts and verified public actions.
+8. Expose diagnostics for rejected posts, rejected actions, and failed feeds.
 
 ## Non-Goals for v0.1
 

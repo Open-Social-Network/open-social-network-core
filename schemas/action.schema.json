@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-social-network.dev/schemas/action.schema.json",
+  "title": "Open Social Network Public Action",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "kind", "actor", "createdAt", "target", "signature"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": ["reaction", "comment"]
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 3
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "target": {
+      "type": "object",
+      "required": ["type", "id", "author"],
+      "properties": {
+        "type": {
+          "const": "post"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 3
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "reaction": {
+      "enum": ["like", "dislike", "none"]
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "value"],
+      "properties": {
+        "alg": {
+          "const": "ES256"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "reaction"
+          }
+        }
+      },
+      "then": {
+        "required": ["reaction"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "comment"
+          }
+        }
+      },
+      "then": {
+        "required": ["content"]
+      }
+    }
+  ]
+}
