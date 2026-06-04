@@ -275,8 +275,8 @@ async function loadProfileFeed(
   | { failure: TimelineFailure }
 > {
   try {
-    const profile = parseIdentity(await fetcher(profileUrl));
-    const feedUrl = resolveEndpoint(profile.endpoints.feed, profileUrl);
+    const profile = normalizeProfileEndpoints(parseIdentity(await fetcher(profileUrl)), profileUrl);
+    const feedUrl = profile.endpoints.feed;
     const feed = parseFeed(await fetcher(feedUrl));
 
     if (feed.author !== profile.handle) {
@@ -326,6 +326,31 @@ async function fetchJson(url: string): Promise<unknown> {
 
 function resolveEndpoint(endpoint: string, profileUrl: string): string {
   return new URL(endpoint, profileUrl).toString();
+}
+
+function normalizeProfileEndpoints(
+  profile: OpenSocialNetworkIdentity,
+  profileUrl: string,
+): OpenSocialNetworkIdentity {
+  const profileEndpoint = resolveEndpoint(profile.endpoints.profile, profileUrl);
+  const endpoints: OpenSocialNetworkIdentity['endpoints'] = {
+    ...profile.endpoints,
+    profile: profileEndpoint,
+    feed: resolveEndpoint(profile.endpoints.feed, profileEndpoint),
+  };
+
+  if (profile.endpoints.actions) {
+    endpoints.actions = resolveEndpoint(profile.endpoints.actions, profileEndpoint);
+  }
+
+  if (profile.endpoints.messages) {
+    endpoints.messages = resolveEndpoint(profile.endpoints.messages, profileEndpoint);
+  }
+
+  return {
+    ...profile,
+    endpoints,
+  };
 }
 
 function parseIdentity(value: unknown): OpenSocialNetworkIdentity {

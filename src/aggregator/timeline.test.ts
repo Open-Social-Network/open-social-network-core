@@ -217,6 +217,63 @@ describe('loadVerifiedTimeline', () => {
     expect(result.rejectedActions).toEqual([]);
     expect(result.failures).toEqual([]);
   });
+
+  it('resolves public action logs from the fetched profile URL when profile endpoints are relative', async () => {
+    const adaKeys = await generateIdentityKeyPair();
+    const tommyKeys = await generateIdentityKeyPair();
+    const ada = {
+      ...(await identityFor('ada@example.test', 'Ada', adaKeys)),
+      endpoints: {
+        profile: './profile.json',
+        feed: './feed.json',
+      },
+    } satisfies OpenSocialNetworkIdentity;
+    const tommy = {
+      ...(await identityFor('tommy@example.test', 'Tommy', tommyKeys)),
+      endpoints: {
+        profile: './profile.json',
+        feed: './feed.json',
+      },
+    } satisfies OpenSocialNetworkIdentity;
+    const target = {
+      type: 'post' as const,
+      id: 'post_1',
+      author: tommy.handle,
+    };
+    const adaLike = await signAction(
+      actionFor('ada_like', ada.handle, '2026-06-03T12:00:00.000Z', target),
+      adaKeys.privateKey,
+    );
+    const adaActionLog: OpenSocialNetworkActionLog = {
+      protocol: 'open-social-network',
+      version: '0.1',
+      actor: ada.handle,
+      actions: [adaLike],
+    };
+    const fixtures: Record<string, unknown> = {
+      'https://ada.example.test/profile.json': ada,
+      'https://ada.example.test/feed.json': emptyFeedFor(ada),
+      'https://ada.example.test/opensocial/actions/index.json': adaActionLog,
+      'https://tommy.example.test/profile.json': tommy,
+      'https://tommy.example.test/feed.json': emptyFeedFor(tommy),
+    };
+
+    const result = await loadVerifiedTimeline(
+      ['https://ada.example.test/profile.json', 'https://tommy.example.test/profile.json'],
+      async (url) => {
+        const value = fixtures[url];
+
+        if (value === undefined) {
+          throw new Error(`Missing fixture for ${url}`);
+        }
+
+        return value;
+      },
+    );
+
+    expect(result.actions.map((action) => action.id)).toEqual(['ada_like']);
+    expect(result.failures).toEqual([]);
+  });
 });
 
 async function identityFor(
