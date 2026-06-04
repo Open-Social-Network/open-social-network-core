@@ -1,4 +1,5 @@
 export * from './aggregator/timeline';
+export * from './protocol/action-inbox';
 export * from './protocol/base64url';
 export * from './protocol/canonical';
 export * from './protocol/direct-messages';

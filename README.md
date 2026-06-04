@@ -138,6 +138,7 @@ open-social-network-core/
 │   ├── post.schema.json
 │   ├── profile.schema.json
 │   ├── action.schema.json
+│   ├── action-inbox.schema.json
 │   └── direct-message.schema.json
 ├── src/
 │   ├── aggregator/
@@ -181,7 +182,7 @@ Your host should be able to publish:
 
 It should never publish private keys.
 
-Public actions can live in a public action folder such as `/opensocial/actions/`. A profile can advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
+Public actions can live in a public action folder such as `/opensocial/actions/`. A profile can advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery. A compatible action inbox stores actions from many actors in an `owner`/`actions` document and verifies each action against the actor profile before accepting it. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
 Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The private message key must never be published.
 

@@ -84,6 +84,15 @@ Recommended public storage locations are:
 
 A profile may advertise `endpoints.actions` when its host accepts signed public actions from compatible apps. The recommended default inbox path is `/opensocial/actions/inbox/index.json`.
 
+An action inbox is a public JSON document with:
+
+- `protocol: "open-social-network"`
+- `version: "0.1"`
+- `owner`, the profile handle that owns the inbox
+- `actions`, a list of signed actions from any verified actor
+
+Compatible inbox implementations should accept `POST` requests containing one signed action, verify the action against the actor profile, ensure `action.target.author` matches `owner`, reject duplicate action ids, and store only verified public actions. Static-only hosts can still update the same file through folder sync, Git, object storage, or any future compatible write adapter.
+
 Those locations are recommendations, not a central service. Hosts may support writes through HTTPS, WebDAV, Git, local folders, S3-compatible storage, IPFS, relays, inboxes, or other optional modules. A page without public action storage is still a valid Open Social Network page; it is simply read-only for actions until a compatible write path is available.
 
 ## Encrypted Direct Messages
