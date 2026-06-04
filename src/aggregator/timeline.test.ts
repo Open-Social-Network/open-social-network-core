@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { loadVerifiedTimeline } from './timeline';
 import { exportPublicKeyJwk, generateIdentityKeyPair } from '../protocol/keys';
+import { signAction } from '../protocol/public-actions';
 import { signPost } from '../protocol/signing';
 import type {
+  OpenSocialNetworkActionInbox,
   OpenSocialNetworkFeed,
   OpenSocialNetworkIdentity,
+  UnsignedOpenSocialNetworkAction,
   UnsignedOpenSocialNetworkPost,
 } from '../protocol/types';
 
@@ -91,4 +94,123 @@ describe('loadVerifiedTimeline', () => {
     ]);
     expect(result.failures).toEqual([]);
   });
+
+  it('loads public action inboxes and keeps only actions signed by known profiles', async () => {
+    const adaKeys = await generateIdentityKeyPair();
+    const tommyKeys = await generateIdentityKeyPair();
+    const malloryKeys = await generateIdentityKeyPair();
+    const ada = await identityFor('ada@example.test', 'Ada', adaKeys);
+    const tommy = await identityFor('tommy@example.test', 'Tommy', tommyKeys, {
+      actions: 'https://tommy.example.test/opensocial/actions/inbox/index.json',
+    });
+    const target = {
+      type: 'post' as const,
+      id: 'post_1',
+      author: tommy.handle,
+    };
+    const verifiedLike = await signAction(
+      actionFor('ada_like', ada.handle, '2026-06-03T12:00:00.000Z', target),
+      adaKeys.privateKey,
+    );
+    const tamperedComment = {
+      ...(await signAction(
+        {
+          id: 'ada_comment',
+          kind: 'comment',
+          actor: ada.handle,
+          createdAt: '2026-06-03T12:01:00.000Z',
+          target,
+          content: 'Original public comment.',
+        },
+        adaKeys.privateKey,
+      )),
+      content: 'Tampered public comment.',
+    };
+    const unknownActorLike = await signAction(
+      actionFor('mallory_like', 'mallory@example.test', '2026-06-03T12:02:00.000Z', target),
+      malloryKeys.privateKey,
+    );
+    const tommyActionInbox: OpenSocialNetworkActionInbox = {
+      protocol: 'open-social-network',
+      version: '0.1',
+      owner: tommy.handle,
+      actions: [unknownActorLike, tamperedComment, verifiedLike],
+    };
+    const fixtures: Record<string, unknown> = {
+      'https://ada.example.test/profile.json': ada,
+      'https://ada.example.test/feed.json': emptyFeedFor(ada),
+      'https://tommy.example.test/profile.json': tommy,
+      'https://tommy.example.test/feed.json': emptyFeedFor(tommy),
+      'https://tommy.example.test/opensocial/actions/inbox/index.json': tommyActionInbox,
+    };
+
+    const result = await loadVerifiedTimeline(
+      ['https://ada.example.test/profile.json', 'https://tommy.example.test/profile.json'],
+      async (url) => fixtures[url],
+    );
+
+    expect(result.actions.map((action) => action.id)).toEqual(['ada_like']);
+    expect(result.actions[0].actorProfile.handle).toBe(ada.handle);
+    expect(result.actions[0].ownerProfile.handle).toBe(tommy.handle);
+    expect(result.rejectedActions).toEqual([
+      {
+        actionId: 'mallory_like',
+        actor: 'mallory@example.test',
+        targetAuthor: tommy.handle,
+        reason: 'Actor profile is not loaded',
+      },
+      {
+        actionId: 'ada_comment',
+        actor: ada.handle,
+        targetAuthor: tommy.handle,
+        reason: 'Signature verification failed',
+      },
+    ]);
+    expect(result.failures).toEqual([]);
+  });
 });
+
+async function identityFor(
+  handle: string,
+  name: string,
+  keyPair: CryptoKeyPair,
+  endpoints: Partial<OpenSocialNetworkIdentity['endpoints']> = {},
+): Promise<OpenSocialNetworkIdentity> {
+  return {
+    protocol: 'open-social-network',
+    version: '0.1',
+    handle,
+    name,
+    publicKey: { alg: 'ES256', jwk: await exportPublicKeyJwk(keyPair.publicKey) },
+    endpoints: {
+      profile: `https://${handle.replace('@', '.')}/profile.json`,
+      feed: `https://${handle.replace('@', '.')}/feed.json`,
+      ...endpoints,
+    },
+  };
+}
+
+function emptyFeedFor(identity: OpenSocialNetworkIdentity): OpenSocialNetworkFeed {
+  return {
+    protocol: 'open-social-network',
+    version: '0.1',
+    author: identity.handle,
+    posts: [],
+  };
+}
+
+function actionFor(
+  id: string,
+  actor: string,
+  createdAt: string,
+  target: UnsignedOpenSocialNetworkAction['target'],
+): UnsignedOpenSocialNetworkAction {
+  return {
+    id,
+    kind: 'reaction',
+    actor,
+    createdAt,
+    target,
+    reaction: 'like',
+  };
+}

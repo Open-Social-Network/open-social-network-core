@@ -138,6 +138,14 @@ A basic aggregator should:
 8. Render only verified posts, verified public actions, and direct messages that decrypt locally.
 9. Expose diagnostics for rejected posts, rejected actions, failed feeds, and undecryptable messages.
 
+For v0.1 reference behavior, a public action from an inbox should be rendered only when:
+
+- `action.target.author` matches the inbox owner
+- the actor profile is known to the aggregator
+- the action signature verifies against the actor profile public key
+
+Actions from unknown actors, actions with invalid signatures, and actions targeting another owner should be reported as rejected actions instead of displayed.
+
 ## Non-Goals for v0.1
 
 The first version does not define:

@@ -166,11 +166,14 @@ Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregat
 1. load followed profile URLs
 2. fetch profile files
 3. resolve feed endpoints
-4. resolve optional public action and encrypted message inbox endpoints
+4. resolve optional public action inbox endpoints
 5. verify every post signature
-6. verify any public actions it has discovered
-7. render only verified posts and verified actions
-8. report rejected posts, rejected actions, and failed feeds
+6. fetch advertised public action inboxes
+7. verify public actions against known actor profiles
+8. render only verified posts and verified actions
+9. report rejected posts, rejected actions, and failed feeds
+
+The reference loader returns `actions` only when the action target belongs to the inbox owner, the actor profile is already known to the aggregator, and the signature verifies against that actor profile. Unknown actors, invalid signatures, and wrong-target actions are reported in `rejectedActions` instead of being rendered.
 
 ### If You Are Building a Page Host
 
