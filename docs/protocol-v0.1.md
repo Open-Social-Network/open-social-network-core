@@ -148,26 +148,43 @@ Clients should ignore unknown fields. Future versions should prefer optional ext
 
 ## Relationship To Existing Decentralized Social Platforms
 
-Open Social Network is not based on the idea that decentralized social media is new. Projects such as Mastodon, ActivityPub, Nostr, Bluesky, Diaspora, Matrix, and the broader fediverse have already made important contributions to open social systems, decentralized identity, federation, and protocol-based communication.
+Open Social Network does not start from the claim that decentralized social media is new.
 
-This protocol explores a different direction: keep the core small, make identity portable by default, and let social clients compete without owning the user, the graph, or the audience.
+Mastodon, ActivityPub, Nostr, Bluesky, Diaspora, Matrix, and the broader fediverse have already proven that open social systems matter. They have advanced federation, decentralized identity, relays, public protocols, community governance, and user choice.
 
-### Design Pressures
+Open Social Network exists because we think some problems still deserve a simpler protocol-first experiment: ownership that starts at the user's page, an experience that feels familiar to nontechnical people, and social records that remain portable across clients, hosts, and aggregators.
 
-Many decentralized systems still depend heavily on servers, relays, instances, or providers. Even when the network is federated, identity can remain tied to infrastructure that users do not fully control. Open Social Network aims for profiles that feel closer to a website, a domain, or an email identity than an account rented from a server.
+The goal is to learn from prior work, not to erase it.
 
-Many systems also ask mainstream users to understand federation, relays, instances, self-hosting, keys, or protocol internals. The protocol should support decentralization at the infrastructure layer without forcing those details into the everyday user experience.
+### The Different Bet
 
-Creator ownership is a primary design goal. Visibility, reputation, ranking, recommendations, and social graphs should not become permanently dependent on a specific platform, app, host, or algorithm. Open Social Network is designed around portable identity, portable followers, portable reputation, and replaceable aggregators.
+Open Social Network treats a profile as a sovereign web object. It should feel closer to a website, a domain, or an email identity than to an account rented from one instance, relay, provider, or app.
 
-The protocol intentionally starts with a small surface: identity, profiles, feeds, follows, signed posts, and portable signed actions. More advanced capabilities should be optional layers that remain inspectable and replaceable.
+The protocol keeps the first layer small: profiles, feeds, signed posts, signed public actions, and encrypted message envelopes. Everything else - ranking, moderation, search, media hosting, notifications, recommendation systems, and managed hosting - can be built as replaceable layers around that foundation.
 
-### Direction
+### Problems We Are Designing Around
 
-Open Social Network is protocol-first. Official tools are reference implementations, not the network itself.
+Identity should not be trapped in infrastructure users do not control. A person should be able to move hosts, change apps, use mirrors, or self-host without restarting their social existence.
 
-The protocol should allow users to create a page, write posts, react, comment, follow, move hosts, change aggregators, or self-host without losing identity or audience. It should support hosted providers, local folders, personal domains, managed hosting, mirrors, and self-managed infrastructure without making any one provider mandatory.
+Decentralization should not become homework for everyday users. People should not need to understand federation, relays, instances, key formats, or static hosting before they can create a page and post.
 
-The protocol itself should not contain a central authority that can remove an identity globally, while hosts, apps, and aggregators remain free to moderate what they store, index, or display. Algorithms should compete, and no single company should control visibility for the whole network.
+Creators should keep their audience and reputation. Followers, visibility, comments, reactions, and trust signals should be portable protocol data, not private database rows that disappear when a user changes clients.
 
-Open Social Network does not claim to have solved decentralized social media. Moderation, spam, discovery, scaling, onboarding, incentives, and safety remain difficult problems. This protocol is an attempt to explore a simpler, more user-centric, and more sovereign direction for social identity on the internet.
+Aggregators should be replaceable. They should read, verify, rank, moderate, and display the network, but they should not own the identities or the graph. Different aggregators and algorithms should be able to compete.
+
+The protocol should stay small enough to inspect. Open Social Network should feel more like a set of web conventions for social identity than a distributed operating system.
+
+### What This Means In Practice
+
+- A page can be hosted anywhere static files work.
+- The public folder is safe to publish; private keys are never published.
+- Posts and public actions are signed so any client can verify them.
+- Direct messages are stored as encrypted envelopes so hosts can carry them without reading them.
+- Official tools are reference implementations, not the network itself.
+- Moderation remains possible at the host, app, aggregator, community, and user layer without creating one global protocol owner.
+
+### Final Note
+
+Open Social Network does not claim to have solved decentralized social media. Moderation, spam, abuse handling, discovery, scaling, onboarding, incentives, and safety are hard problems.
+
+This protocol is an attempt to explore a smaller and more user-centered path: social identity as open internet infrastructure, where platforms become interfaces and users keep the underlying identity, audience, and content.
