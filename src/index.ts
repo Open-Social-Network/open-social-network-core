@@ -5,6 +5,7 @@ export * from './protocol/canonical';
 export * from './protocol/direct-messages';
 export * from './protocol/follows';
 export * from './protocol/keys';
+export * from './protocol/message-inbox';
 export * from './protocol/public-actions';
 export * from './protocol/signing';
 export * from './protocol/types';

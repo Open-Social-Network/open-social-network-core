@@ -151,6 +151,8 @@ Recommended public storage locations are:
 - `/opensocial/messages/outbox/index.json`
 - `/opensocial/messages/{message-id}.json`
 
+The recommended public inbox document is an `owner`/`messages` JSON file. It stores encrypted envelopes, not plaintext. Compatible inbox implementations should accept `POST` requests containing one signed encrypted message, verify the message against the sender profile, ensure `message.recipient` matches the inbox `owner`, reject duplicate message ids, and store only the encrypted envelope. Static-only hosts can update the same file through folder sync, Git, object storage, or any future compatible write adapter.
+
 Those paths are storage conventions, not a mandatory service. A host may accept encrypted message writes through any compatible module, including HTTPS, WebDAV, S3-compatible storage, local sync, inbox relays, or future protocol bridges. A page without message storage is still valid; it simply cannot receive direct messages through that host yet.
 
 Clients must not render plaintext unless decryption succeeds with the recipient's private message key and the sender signature verifies against the sender profile.

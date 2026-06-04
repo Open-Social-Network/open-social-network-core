@@ -140,7 +140,8 @@ open-social-network-core/
 │   ├── profile.schema.json
 │   ├── action.schema.json
 │   ├── action-inbox.schema.json
-│   └── direct-message.schema.json
+│   ├── direct-message.schema.json
+│   └── message-inbox.schema.json
 ├── src/
 │   ├── aggregator/
 │   └── protocol/
@@ -158,7 +159,8 @@ Start here:
 3. Inspect [schemas/feed.schema.json](./schemas/feed.schema.json).
 4. Inspect [schemas/action.schema.json](./schemas/action.schema.json).
 5. Inspect [schemas/direct-message.schema.json](./schemas/direct-message.schema.json).
-6. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts), [src/protocol/public-actions.test.ts](./src/protocol/public-actions.test.ts), and [src/protocol/direct-messages.test.ts](./src/protocol/direct-messages.test.ts).
+6. Inspect [schemas/message-inbox.schema.json](./schemas/message-inbox.schema.json).
+7. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts), [src/protocol/public-actions.test.ts](./src/protocol/public-actions.test.ts), [src/protocol/direct-messages.test.ts](./src/protocol/direct-messages.test.ts), and [src/protocol/message-inbox.test.ts](./src/protocol/message-inbox.test.ts).
 
 ### If You Are Building an Aggregator
 
@@ -190,7 +192,7 @@ It should never publish private keys.
 
 Public actions can live in a public action folder such as `/opensocial/actions/`. The actor-owned action log at `/opensocial/actions/index.json` lets a profile publish its own portable likes, dislikes, and comments from any static host. A profile can also advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery for actions targeting that profile. A compatible action inbox stores actions from many actors in an `owner`/`actions` document and verifies each action against the actor profile before accepting it. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
-Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The private message key must never be published.
+Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The recommended inbox document is `/opensocial/messages/inbox/index.json` with an `owner` and a `messages` array of encrypted envelopes. Compatible inbox implementations should accept one signed encrypted message, verify it against the sender profile, ensure `message.recipient` matches `owner`, reject duplicate message ids, and store only the encrypted envelope. The private message key must never be published.
 
 ## Install
 

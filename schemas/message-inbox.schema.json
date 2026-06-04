@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-social-network.dev/schemas/message-inbox.schema.json",
+  "title": "Open Social Network Encrypted Message Inbox",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["protocol", "version", "owner", "messages"],
+  "properties": {
+    "protocol": {
+      "const": "open-social-network"
+    },
+    "version": {
+      "const": "0.1"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 3
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "./direct-message.schema.json"
+      }
+    }
+  }
+}
