@@ -118,6 +118,7 @@ Open Social Network Core v0.1 defines the minimum viable social protocol:
 
 - `profile.json` identity files
 - `feed.json` post feeds
+- public follow lists
 - ES256 signed posts
 - signed public actions for likes, dislikes, and comments
 - encrypted direct-message envelopes
@@ -163,7 +164,7 @@ Start here:
 
 Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregator/timeline.ts) as the baseline behavior:
 
-1. load followed profile URLs
+1. load followed profile URLs from local choice or a portable follow list
 2. fetch profile files
 3. resolve feed endpoints
 4. verify every post signature
@@ -172,6 +173,8 @@ Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregat
 7. verify public actions against known actor profiles
 8. render only verified posts and verified actions
 9. report rejected posts, rejected actions, and failed feeds
+
+Portable follow lists live at `/opensocial/follows/index.json`. They let a profile publish the people it follows as simple protocol data, so a user can move between aggregators without rebuilding the graph from scratch.
 
 The reference loader reads two complementary public action sources. A profile's own `/opensocial/actions/index.json` is the actor-owned log of likes, dislikes, and comments that identity has published. An advertised `endpoints.actions` inbox is the target-owned inbox for actions delivered to that profile. The loader returns `actions` only when the actor profile is known, the target profile is known, and the signature verifies against the actor profile. Unknown actors, unknown targets, invalid signatures, and wrong-target inbox actions are reported in `rejectedActions` instead of being rendered.
 

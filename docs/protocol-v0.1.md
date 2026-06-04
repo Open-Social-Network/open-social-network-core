@@ -41,6 +41,28 @@ Recommended location:
 
 Aggregators may fetch followed profiles, resolve feed endpoints, verify post signatures, and merge valid posts chronologically.
 
+## Portable Follows
+
+Follows are portable relationship records. They should not exist only inside one aggregator's local database.
+
+The recommended public storage location is:
+
+- `/opensocial/follows/index.json`
+
+A follow list is a public JSON document with:
+
+- `protocol: "open-social-network"`
+- `version: "0.1"`
+- `owner`, the profile handle that publishes the list
+- `follows`, a list of followed profile references
+
+Each follow entry contains:
+
+- `profile`, the followed profile URL
+- optional `handle`, a human-readable hint for the followed identity
+
+The follow list is intentionally simple in v0.1. It is owned by the profile that publishes it. Aggregators may use it to restore a user's graph across browsers and clients, seed a timeline, or help users migrate between aggregators. Clients should deduplicate follows by `profile` and ignore malformed entries.
+
 ## Signed Posts
 
 Every post must include a signature over its canonical signing payload.
@@ -137,7 +159,7 @@ Clients must not render plaintext unless decryption succeeds with the recipient'
 
 A basic aggregator should:
 
-1. Load followed profile URLs.
+1. Load followed profile URLs from local user choice and, when available, the user's portable follow list.
 2. Fetch each `profile.json`.
 3. Resolve and fetch each feed endpoint.
 4. Reject feeds where `feed.author` does not match `profile.handle`.
