@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-social-network.dev/schemas/direct-message.schema.json",
+  "title": "Open Social Network Encrypted Direct Message",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "protocol",
+    "version",
+    "kind",
+    "id",
+    "sender",
+    "recipient",
+    "createdAt",
+    "encryption",
+    "signature"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "open-social-network"
+    },
+    "version": {
+      "const": "0.1"
+    },
+    "kind": {
+      "const": "direct-message"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sender": {
+      "type": "string",
+      "minLength": 3
+    },
+    "recipient": {
+      "type": "string",
+      "minLength": 3
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "encryption": {
+      "type": "object",
+      "required": ["alg", "epk", "iv", "ciphertext"],
+      "properties": {
+        "alg": {
+          "const": "ECDH-P256-A256GCM"
+        },
+        "epk": {
+          "type": "object"
+        },
+        "iv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ciphertext": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "value"],
+      "properties": {
+        "alg": {
+          "const": "ES256"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 export * from './aggregator/timeline';
 export * from './protocol/base64url';
 export * from './protocol/canonical';
+export * from './protocol/direct-messages';
 export * from './protocol/keys';
 export * from './protocol/public-actions';
 export * from './protocol/signing';

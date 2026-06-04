@@ -83,6 +83,35 @@ Recommended public storage locations are:
 
 Those locations are recommendations, not a central service. Hosts may support writes through HTTPS, WebDAV, Git, local folders, S3-compatible storage, IPFS, relays, inboxes, or other optional modules. A page without public action storage is still a valid Open Social Network page; it is simply read-only for actions until a compatible write path is available.
 
+## Encrypted Direct Messages
+
+Direct messages are encrypted protocol envelopes. They are not plaintext comments, private database rows, or a feature owned by one aggregator.
+
+The first direct-message envelope uses:
+
+- `ECDH-P256-A256GCM`
+- a recipient message public key using `ECDH-P256`
+- an ephemeral sender message key per message
+- AES-GCM ciphertext
+- an ES256 signature over the encrypted envelope by the sender identity
+
+The signature proves which identity created the encrypted envelope. The encryption keeps the message body private from aggregators, hosts, indexes, and static storage providers.
+
+A profile may advertise:
+
+- `messagePublicKey`
+- `endpoints.messages`
+
+Recommended public storage locations are:
+
+- `/opensocial/messages/inbox/index.json`
+- `/opensocial/messages/outbox/index.json`
+- `/opensocial/messages/{message-id}.json`
+
+Those paths are storage conventions, not a mandatory service. A host may accept encrypted message writes through any compatible module, including HTTPS, WebDAV, S3-compatible storage, local sync, inbox relays, or future protocol bridges. A page without message storage is still valid; it simply cannot receive direct messages through that host yet.
+
+Clients must not render plaintext unless decryption succeeds with the recipient's private message key and the sender signature verifies against the sender profile.
+
 ## Aggregator Behavior
 
 A basic aggregator should:
@@ -93,8 +122,9 @@ A basic aggregator should:
 4. Reject feeds where `feed.author` does not match `profile.handle`.
 5. Verify every post against the profile public key.
 6. Fetch and verify any public action sources it knows about.
-7. Render only verified posts and verified public actions.
-8. Expose diagnostics for rejected posts, rejected actions, and failed feeds.
+7. Fetch encrypted direct-message envelopes only when the user has opted into a compatible inbox.
+8. Render only verified posts, verified public actions, and direct messages that decrypt locally.
+9. Expose diagnostics for rejected posts, rejected actions, failed feeds, and undecryptable messages.
 
 ## Non-Goals for v0.1
 
@@ -106,7 +136,6 @@ The first version does not define:
 - global follower counts
 - moderation policy
 - ranking algorithms
-- encrypted messaging
 - media storage
 - payment systems
 - tokens or blockchains

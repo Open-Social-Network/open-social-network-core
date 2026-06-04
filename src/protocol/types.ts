@@ -11,6 +11,11 @@ export interface OpenSocialNetworkPublicKey {
   jwk: JsonWebKey;
 }
 
+export interface OpenSocialNetworkMessagePublicKey {
+  alg: 'ECDH-P256';
+  jwk: JsonWebKey;
+}
+
 export interface OpenSocialNetworkIdentity {
   protocol: 'open-social-network';
   version: OpenSocialNetworkVersion;
@@ -20,10 +25,12 @@ export interface OpenSocialNetworkIdentity {
   avatar?: string;
   website?: string;
   publicKey: OpenSocialNetworkPublicKey;
+  messagePublicKey?: OpenSocialNetworkMessagePublicKey;
   endpoints: {
     profile: string;
     feed: string;
     avatar?: string;
+    messages?: string;
   };
 }
 
@@ -95,4 +102,32 @@ export interface OpenSocialNetworkActionLog {
   version: OpenSocialNetworkVersion;
   actor: string;
   actions: OpenSocialNetworkAction[];
+}
+
+export interface UnsignedOpenSocialNetworkDirectMessage {
+  protocol: 'open-social-network';
+  version: OpenSocialNetworkVersion;
+  kind: 'direct-message';
+  id: string;
+  sender: string;
+  recipient: string;
+  createdAt: string;
+  encryption: {
+    alg: 'ECDH-P256-A256GCM';
+    epk: JsonWebKey;
+    iv: string;
+    ciphertext: string;
+  };
+}
+
+export interface OpenSocialNetworkDirectMessage
+  extends UnsignedOpenSocialNetworkDirectMessage {
+  signature: OpenSocialNetworkSignature;
+}
+
+export interface OpenSocialNetworkDirectMessageLog {
+  protocol: 'open-social-network';
+  version: OpenSocialNetworkVersion;
+  owner: string;
+  messages: OpenSocialNetworkDirectMessage[];
 }

@@ -120,11 +120,12 @@ Open Social Network Core v0.1 defines the minimum viable social protocol:
 - `feed.json` post feeds
 - ES256 signed posts
 - signed public actions for likes, dislikes, and comments
+- encrypted direct-message envelopes
 - canonical JSON signing payloads
 - profile endpoint discovery
 - chronological feed aggregation
 
-It does not define accounts, global search, moderation policy, encrypted messaging, recommendations, or media storage. Those should remain independent layers.
+It does not define accounts, global search, moderation policy, recommendations, or media storage. Those should remain independent layers.
 
 ## Repository Contents
 
@@ -136,7 +137,8 @@ open-social-network-core/
 │   ├── feed.schema.json
 │   ├── post.schema.json
 │   ├── profile.schema.json
-│   └── action.schema.json
+│   ├── action.schema.json
+│   └── direct-message.schema.json
 ├── src/
 │   ├── aggregator/
 │   └── protocol/
@@ -153,7 +155,8 @@ Start here:
 2. Inspect [schemas/profile.schema.json](./schemas/profile.schema.json).
 3. Inspect [schemas/feed.schema.json](./schemas/feed.schema.json).
 4. Inspect [schemas/action.schema.json](./schemas/action.schema.json).
-5. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts) and [src/protocol/public-actions.test.ts](./src/protocol/public-actions.test.ts).
+5. Inspect [schemas/direct-message.schema.json](./schemas/direct-message.schema.json).
+6. Look at the signing tests in [src/protocol/signing.test.ts](./src/protocol/signing.test.ts), [src/protocol/public-actions.test.ts](./src/protocol/public-actions.test.ts), and [src/protocol/direct-messages.test.ts](./src/protocol/direct-messages.test.ts).
 
 ### If You Are Building an Aggregator
 
@@ -178,6 +181,8 @@ Your host should be able to publish:
 It should never publish private keys.
 
 Public actions can live in a public action folder such as `/opensocial/actions/`. That folder can be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
+
+Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The private message key must never be published.
 
 ## Install
 
