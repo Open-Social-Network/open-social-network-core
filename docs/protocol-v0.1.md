@@ -82,6 +82,15 @@ Recommended public storage locations are:
 - `/opensocial/actions/inbox/index.json`
 - `/opensocial/actions/{action-id}.json`
 
+The actor-owned action log at `/opensocial/actions/index.json` is a public JSON document with:
+
+- `protocol: "open-social-network"`
+- `version: "0.1"`
+- `actor`, the profile handle that published the actions
+- `actions`, a list of signed actions created by that actor
+
+Aggregators may fetch this conventional action log for every loaded profile. Actions from this log should render only when `action.actor` matches the log actor, the target profile is also loaded, and the action signature verifies against the actor profile.
+
 A profile may advertise `endpoints.actions` when its host accepts signed public actions from compatible apps. The recommended default inbox path is `/opensocial/actions/inbox/index.json`.
 
 An action inbox is a public JSON document with:
@@ -133,18 +142,25 @@ A basic aggregator should:
 3. Resolve and fetch each feed endpoint.
 4. Reject feeds where `feed.author` does not match `profile.handle`.
 5. Verify every post against the profile public key.
-6. Fetch and verify any public action sources it knows about.
-7. Fetch encrypted direct-message envelopes only when the user has opted into a compatible inbox.
-8. Render only verified posts, verified public actions, and direct messages that decrypt locally.
-9. Expose diagnostics for rejected posts, rejected actions, failed feeds, and undecryptable messages.
+6. Fetch and verify each loaded profile's conventional public action log when available.
+7. Fetch and verify advertised public action inboxes when available.
+8. Fetch encrypted direct-message envelopes only when the user has opted into a compatible inbox.
+9. Render only verified posts, verified public actions, and direct messages that decrypt locally.
+10. Expose diagnostics for rejected posts, rejected actions, failed feeds, and undecryptable messages.
 
-For v0.1 reference behavior, a public action from an inbox should be rendered only when:
+For v0.1 reference behavior, a public action from an actor log should be rendered only when:
+
+- `action.actor` matches the log actor
+- `action.target.author` is a loaded profile
+- the action signature verifies against the actor profile public key
+
+A public action from an inbox should be rendered only when:
 
 - `action.target.author` matches the inbox owner
 - the actor profile is known to the aggregator
 - the action signature verifies against the actor profile public key
 
-Actions from unknown actors, actions with invalid signatures, and actions targeting another owner should be reported as rejected actions instead of displayed.
+Actions from unknown actors, actions targeting unknown profiles, actions with invalid signatures, and actions targeting another inbox owner should be reported as rejected actions instead of displayed.
 
 ## Non-Goals for v0.1
 

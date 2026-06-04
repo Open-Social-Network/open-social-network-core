@@ -166,14 +166,14 @@ Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregat
 1. load followed profile URLs
 2. fetch profile files
 3. resolve feed endpoints
-4. resolve optional public action inbox endpoints
-5. verify every post signature
-6. fetch advertised public action inboxes
+4. verify every post signature
+5. fetch each loaded profile's public action log when available
+6. fetch advertised public action inboxes when available
 7. verify public actions against known actor profiles
 8. render only verified posts and verified actions
 9. report rejected posts, rejected actions, and failed feeds
 
-The reference loader returns `actions` only when the action target belongs to the inbox owner, the actor profile is already known to the aggregator, and the signature verifies against that actor profile. Unknown actors, invalid signatures, and wrong-target actions are reported in `rejectedActions` instead of being rendered.
+The reference loader reads two complementary public action sources. A profile's own `/opensocial/actions/index.json` is the actor-owned log of likes, dislikes, and comments that identity has published. An advertised `endpoints.actions` inbox is the target-owned inbox for actions delivered to that profile. The loader returns `actions` only when the actor profile is known, the target profile is known, and the signature verifies against the actor profile. Unknown actors, unknown targets, invalid signatures, and wrong-target inbox actions are reported in `rejectedActions` instead of being rendered.
 
 ### If You Are Building a Page Host
 
@@ -185,7 +185,7 @@ Your host should be able to publish:
 
 It should never publish private keys.
 
-Public actions can live in a public action folder such as `/opensocial/actions/`. A profile can advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery. A compatible action inbox stores actions from many actors in an `owner`/`actions` document and verifies each action against the actor profile before accepting it. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
+Public actions can live in a public action folder such as `/opensocial/actions/`. The actor-owned action log at `/opensocial/actions/index.json` lets a profile publish its own portable likes, dislikes, and comments from any static host. A profile can also advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery for actions targeting that profile. A compatible action inbox stores actions from many actors in an `owner`/`actions` document and verifies each action against the actor profile before accepting it. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
 Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The private message key must never be published.
 
