@@ -287,7 +287,7 @@ Open Social Network is in early alpha. The goal of this repository is to make th
 
 The ambition is large, but the first step is deliberately small: prove that a signed, sovereign, static social feed can exist and be read by any compatible client.
 
-## Relationship To Existing Decentralized Social Platforms
+## How Open Social Network Differs From Existing Decentralized Social Platforms
 
 Open Social Network does not claim that decentralized social media starts here.
 

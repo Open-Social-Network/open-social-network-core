@@ -28,3 +28,9 @@ Every pull request should explain:
 - validation performed
 
 Protocol changes should include tests and schema updates when applicable.
+
+## Project Context
+
+Open Social Network is not trying to erase the work of Mastodon, ActivityPub, Nostr, Bluesky/AT Protocol, Diaspora, Matrix, or the broader fediverse. Those projects have already moved open social infrastructure forward in serious ways.
+
+This repository exists to test a smaller foundation for social identity: sovereign profiles, signed feeds, portable public actions, replaceable aggregators, and web-native discovery. Contributions should keep the core protocol small enough to explain, strict enough to verify, and independent of any single host, app, company, or deployment model.
