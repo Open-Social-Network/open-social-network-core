@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { exportPublicKeyJwk, generateIdentityKeyPair } from './keys';
 import {
+  createActionId,
+  createCommentAction,
+  createReactionAction,
   summarizePostActions,
   signAction,
   verifyAction,
@@ -11,6 +14,65 @@ import type {
 } from './types';
 
 describe('signed public actions', () => {
+  it('creates portable reaction and comment actions without hand-written JSON', () => {
+    const target = {
+      type: 'post' as const,
+      id: 'post_1',
+      author: 'tommy@example.test',
+      url: 'https://tommy.example.test/posts/post_1',
+    };
+
+    expect(
+      createReactionAction('ada@example.test', target, 'like', {
+        id: 'reaction_1',
+        createdAt: '2026-06-03T12:00:00.000Z',
+      }),
+    ).toEqual({
+      id: 'reaction_1',
+      kind: 'reaction',
+      actor: 'ada@example.test',
+      createdAt: '2026-06-03T12:00:00.000Z',
+      target,
+      reaction: 'like',
+    });
+
+    expect(
+      createCommentAction('ada@example.test', target, '  Portable comments are signed actions.  ', {
+        id: 'comment_1',
+        createdAt: '2026-06-03T12:01:00.000Z',
+      }),
+    ).toEqual({
+      id: 'comment_1',
+      kind: 'comment',
+      actor: 'ada@example.test',
+      createdAt: '2026-06-03T12:01:00.000Z',
+      target,
+      content: 'Portable comments are signed actions.',
+    });
+  });
+
+  it('creates deterministic action ids from kind, timestamp, and entropy', () => {
+    expect(
+      createActionId('reaction', '2026-06-03T12:00:00.000Z', {
+        randomUUID: () => 'entropy',
+      }),
+    ).toBe(`reaction_${Date.parse('2026-06-03T12:00:00.000Z').toString(36)}_entropy`);
+  });
+
+  it('rejects empty public comments before signing', () => {
+    expect(() =>
+      createCommentAction(
+        'ada@example.test',
+        {
+          type: 'post',
+          id: 'post_1',
+          author: 'tommy@example.test',
+        },
+        '   ',
+      ),
+    ).toThrow('Comment is required');
+  });
+
   it('verifies a reaction signed by the actor identity', async () => {
     const { identity, privateKey } = await createIdentity('ada@example.test', 'Ada');
     const action: UnsignedOpenSocialNetworkAction = {

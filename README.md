@@ -192,6 +192,13 @@ It should never publish private keys.
 
 Public actions can live in a public action folder such as `/opensocial/actions/`. The actor-owned action log at `/opensocial/actions/index.json` lets a profile publish its own portable likes, dislikes, and comments from any static host. A profile can also advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery for actions targeting that profile. A compatible action inbox stores actions from many actors in an `owner`/`actions` document and verifies each action against the actor profile before accepting it. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
+Apps should create actions through the reference helpers instead of hand-writing action JSON:
+
+- `createReactionAction(actor, target, "like" | "dislike" | "none")`
+- `createCommentAction(actor, target, content)`
+- `signAction(unsignedAction, privateKey)`
+- `verifyAction(signedAction, actorProfile)`
+
 Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The recommended inbox document is `/opensocial/messages/inbox/index.json` with an `owner` and a `messages` array of encrypted envelopes. Compatible inbox implementations should accept one signed encrypted message, verify it against the sender profile, ensure `message.recipient` matches `owner`, reject duplicate message ids, and store only the encrypted envelope. The private message key must never be published.
 
 ## Install

@@ -96,6 +96,8 @@ Every action targets a post by:
 
 Every action is signed by the actor identity. The signing payload is the action object without the `signature` field, using the same canonical JSON rules as posts.
 
+Reference implementations should use the core helpers `createReactionAction`, `createCommentAction`, `signAction`, and `verifyAction` instead of asking applications to hand-write action JSON. This keeps user-facing apps simple while preserving a portable, verifiable protocol record.
+
 Aggregators should count reactions with one active reaction per actor per target. When the same actor publishes multiple reactions for the same post, the latest action wins. A `none` reaction removes that actor's active reaction. Comments should be rendered only after the action signature verifies against the actor profile.
 
 Recommended public storage locations are:

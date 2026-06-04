@@ -8,6 +8,7 @@ import type {
   OpenSocialNetworkReaction,
   UnsignedOpenSocialNetworkAction,
   UnsignedOpenSocialNetworkCommentAction,
+  UnsignedOpenSocialNetworkReactionAction,
 } from './types';
 
 const SIGNING_ALGORITHM: EcdsaParams = {
@@ -20,6 +21,74 @@ export interface OpenSocialNetworkPostActionSummary {
   dislikes: number;
   reactionsByActor: Record<string, Exclude<OpenSocialNetworkReaction, 'none'>>;
   comments: UnsignedOpenSocialNetworkCommentAction[];
+}
+
+export interface OpenSocialNetworkActionCreationOptions {
+  id?: string;
+  createdAt?: string;
+  randomUUID?: () => string;
+}
+
+export function createReactionAction(
+  actor: string,
+  target: OpenSocialNetworkActionTarget,
+  reaction: OpenSocialNetworkReaction,
+  options: OpenSocialNetworkActionCreationOptions = {},
+): UnsignedOpenSocialNetworkReactionAction {
+  const createdAt = actionCreatedAt(options.createdAt);
+
+  return {
+    id: options.id ?? createActionId('reaction', createdAt, options),
+    kind: 'reaction',
+    actor,
+    createdAt,
+    target,
+    reaction,
+  };
+}
+
+export function createCommentAction(
+  actor: string,
+  target: OpenSocialNetworkActionTarget,
+  content: string,
+  options: OpenSocialNetworkActionCreationOptions = {},
+): UnsignedOpenSocialNetworkCommentAction {
+  const trimmedContent = content.trim();
+
+  if (!trimmedContent) {
+    throw new Error('Comment is required');
+  }
+
+  const createdAt = actionCreatedAt(options.createdAt);
+
+  return {
+    id: options.id ?? createActionId('comment', createdAt, options),
+    kind: 'comment',
+    actor,
+    createdAt,
+    target,
+    content: trimmedContent,
+  };
+}
+
+export function createActionId(
+  kind: 'reaction' | 'comment',
+  createdAt: string,
+  options: Pick<OpenSocialNetworkActionCreationOptions, 'randomUUID'> = {},
+): string {
+  const timestamp = Date.parse(createdAt);
+
+  if (Number.isNaN(timestamp)) {
+    throw new Error('Action createdAt must be a valid date-time string');
+  }
+
+  const entropy =
+    options.randomUUID?.() ??
+    (typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2));
+
+  return `${kind}_${timestamp.toString(36)}_${entropy}`;
 }
 
 export async function signAction(
@@ -98,6 +167,18 @@ export function summarizePostActions(
     reactionsByActor,
     comments,
   };
+}
+
+function actionCreatedAt(createdAt?: string): string {
+  if (!createdAt) {
+    return new Date().toISOString();
+  }
+
+  if (Number.isNaN(Date.parse(createdAt))) {
+    throw new Error('Action createdAt must be a valid date-time string');
+  }
+
+  return createdAt;
 }
 
 function targetsMatch(left: OpenSocialNetworkActionTarget, right: OpenSocialNetworkActionTarget): boolean {
