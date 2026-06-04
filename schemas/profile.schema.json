@@ -70,6 +70,12 @@
         },
         "avatar": {
           "type": "string"
+        },
+        "actions": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "string"
         }
       }
     }

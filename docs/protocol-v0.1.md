@@ -29,7 +29,7 @@ The identity file contains:
 - display name
 - optional profile metadata
 - public signing key
-- endpoints for profile and feed files
+- endpoints for profile, feed, public actions, and encrypted messages
 
 ## Feed
 
@@ -79,7 +79,10 @@ Aggregators should count reactions with one active reaction per actor per target
 Recommended public storage locations are:
 
 - `/opensocial/actions/index.json`
+- `/opensocial/actions/inbox/index.json`
 - `/opensocial/actions/{action-id}.json`
+
+A profile may advertise `endpoints.actions` when its host accepts signed public actions from compatible apps. The recommended default inbox path is `/opensocial/actions/inbox/index.json`.
 
 Those locations are recommendations, not a central service. Hosts may support writes through HTTPS, WebDAV, Git, local folders, S3-compatible storage, IPFS, relays, inboxes, or other optional modules. A page without public action storage is still a valid Open Social Network page; it is simply read-only for actions until a compatible write path is available.
 

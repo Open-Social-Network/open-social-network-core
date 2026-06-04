@@ -165,10 +165,11 @@ Use the reference timeline loader in [src/aggregator/timeline.ts](./src/aggregat
 1. load followed profile URLs
 2. fetch profile files
 3. resolve feed endpoints
-4. verify every post signature
-5. verify any public actions it has discovered
-6. render only verified posts and verified actions
-7. report rejected posts, rejected actions, and failed feeds
+4. resolve optional public action and encrypted message inbox endpoints
+5. verify every post signature
+6. verify any public actions it has discovered
+7. render only verified posts and verified actions
+8. report rejected posts, rejected actions, and failed feeds
 
 ### If You Are Building a Page Host
 
@@ -180,7 +181,7 @@ Your host should be able to publish:
 
 It should never publish private keys.
 
-Public actions can live in a public action folder such as `/opensocial/actions/`. That folder can be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
+Public actions can live in a public action folder such as `/opensocial/actions/`. A profile can advertise `endpoints.actions`, usually `/opensocial/actions/inbox/index.json`, when a compatible host accepts automatic signed action delivery. That folder can also be updated by any compatible write path a host supports. GitHub Pages, Cloudflare Pages, Netlify, Vercel, S3-compatible storage, a personal server, local folder sync, and future protocol modules can all be valid approaches.
 
 Encrypted direct messages can live in a public message folder such as `/opensocial/messages/inbox/` because the message body is ciphertext. The private message key must never be published.
 
@@ -217,7 +218,9 @@ npm audit
   },
   "endpoints": {
     "profile": "/profile.json",
-    "feed": "/feed.json"
+    "feed": "/feed.json",
+    "actions": "/opensocial/actions/inbox/index.json",
+    "messages": "/opensocial/messages/inbox/index.json"
   }
 }
 ```
